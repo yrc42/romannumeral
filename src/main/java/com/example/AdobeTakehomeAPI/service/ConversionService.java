@@ -4,8 +4,13 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 @Service
 public class ConversionService {
+    private static final Logger logger = LogManager.getLogger(ConversionService.class);
     private static final LinkedHashMap<Integer, String> ROMAN_MAPPING = new LinkedHashMap<>();
     static {
         ROMAN_MAPPING.put(1000, "M");
@@ -25,9 +30,11 @@ public class ConversionService {
     public ConversionService(){
     }
     public String getRomanConversion(Integer input){
+        // Validate input range
         if (input>3999 || input<1){
             throw new IllegalArgumentException("Number should be in range of 1-3999");
         }
+        // building the roman numeral result
         StringBuilder romanNumeral = new StringBuilder();
         for (Map.Entry<Integer, String> item: ROMAN_MAPPING.entrySet()){
             while (input>=item.getKey()){
@@ -35,6 +42,8 @@ public class ConversionService {
                 input -= item.getKey();
             }
         }
+        // Log the conversion result
+        logger.info("Converted {} to Roman numeral: {}", input, romanNumeral.toString());
         return romanNumeral.toString();
     }
 }
